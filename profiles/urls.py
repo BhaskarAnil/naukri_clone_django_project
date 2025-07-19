@@ -1,7 +1,8 @@
 from django.urls import path
-from .views import register_view, employer_register_view, login_view, home_view, logout_view, employer_home_view, profile_view, employer_profile_view, companies_view, companies_follow_view, companies_unfollow_view
+from .views import register_view, employer_register_view, login_view, home_view, logout_view, employer_home_view, profile_view, employer_profile_view, companies_view, companies_follow_view, companies_unfollow_view,ping_view
 
 urlpatterns = [
+    
     path('register/', register_view, name='register'),
     path('employer-register/', employer_register_view, name='employer_register'),
     path('', login_view, name='login'),
@@ -15,4 +16,10 @@ urlpatterns = [
          companies_follow_view, name='follow'),
     path('companies/<int:company_id>/unfollow/',
          companies_unfollow_view, name='unfollow'),
+
+
+
+    # for uptimerobot
+    path('ping/', ping_view, name='ping'),
+
 ]

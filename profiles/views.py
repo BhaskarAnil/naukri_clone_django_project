@@ -202,3 +202,8 @@ def companies_unfollow_view(request, company_id):
     company = get_object_or_404(Company, pk=company_id)
     CompanyFollows.objects.filter(user=user, company=company).delete()
     return redirect(request.META.get('HTTP_REFERER', reverse('companies')))
+
+# for uptimerobot
+from django.http import HttpResponse
+def ping_view(request):
+    return HttpResponse('load')
