@@ -1,0 +1,230 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  height: 100vh;
+  box-sizing: border-box;
+}
+.main-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid #e0e0e0;
+}
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+  height: 64px;
+  gap: 2rem;
+}
+.brand-logo {
+  display: flex;
+  align-items: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1d4497;
+  text-decoration: none;
+  flex: 1;
+}
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+  margin-right: 0;
+}
+.main-header {
+  width: 100%;
+}
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  position: static;
+  background: none;
+  box-shadow: none;
+  padding: 0;
+  border-radius: 0;
+  width: auto;
+}
+.nav-toggle {
+  display: none;
+}
+.brand-logo {
+  display: flex;
+  align-items: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1d4497;
+  text-decoration: none;
+}
+.brand-logo img {
+  height: 40px;
+  margin-right: 10px;
+}
+.main-nav a {
+  color: #1d4497;
+  font-weight: 500;
+  margin: 0 8px;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: all 0.4s ease;
+}
+.main-nav a.active {
+  color: #0e2860;
+  font-weight: 500;
+  text-decoration: underline;
+}
+.main-nav a:hover {
+  border-radius: 8px;
+  transform: scale(1.2);
+}
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.avatar {
+  background: #e3e7fa;
+  color: #6c63ff;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+.username {
+  font-weight: 600;
+  color: #1d4497;
+}
+.logout-btn {
+  color: #d32f2f;
+  font-weight: 500;
+  margin-left: 10px;
+  text-decoration: none;
+}
+.footer-copy {
+  margin-top: 8px;
+}
+
+@media (max-width: 800px) {
+  body {
+    padding: 10px;
+    min-height: fit-content;
+  }
+  .header-inner,
+  main {
+    max-width: 100%;
+    padding: 0 0.5rem;
+  }
+  .header-inner {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.7rem;
+    height: auto;
+    padding: 0.5rem 0.5rem 0 0.5rem;
+    position: relative;
+  }
+  .brand-logo {
+    font-size: 1.1rem;
+  }
+  .brand-logo img {
+    height: 28px;
+    margin-right: 6px;
+  }
+  .main-nav {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+    margin: 0.5rem 0;
+    font-size: 0.97rem;
+    width: 100%;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    position: absolute;
+    top: 50px;
+    right: 0;
+    padding: 0.5rem 1rem;
+    border-radius: 0 0 10px 10px;
+    z-index: 100;
+  }
+  .main-nav.open {
+    display: flex;
+    width: 60%;
+    background: #012f91;
+  }
+  .main-nav a,
+  .main-nav a.active {
+    margin: 0;
+    color: white;
+    font-size: 0.97rem;
+    padding: 0.2rem 0.5rem;
+  }
+  .nav-toggle {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 1.7rem;
+    color: #1d4497;
+    margin: 0.2rem 0 0.2rem 0.2rem;
+    cursor: pointer;
+    z-index: 101;
+  }
+  .user-menu {
+    gap: 0.2rem;
+    margin-right: 0;
+  }
+  .avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 1rem;
+  }
+  .username {
+    font-size: 0.98rem;
+  }
+  .home-section,
+  .welcome-message {
+    padding: 1rem 0.3rem;
+    border-radius: 10px;
+  }
+  .home-title,
+  .welcome-message h1 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+  .home-list {
+    gap: 1rem;
+  }
+  .home-card {
+    padding: 1rem 0.5rem 0.7rem 0.5rem;
+    min-height: 100px;
+    border-radius: 8px;
+    max-width: 100%;
+  }
+  .home-logo {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .home-info {
+    text-align: left;
+  }
+  .home-name {
+    font-size: 0.98rem;
+    margin-bottom: 0.3rem;
+  }
+  .home-description,
+  .welcome-message p {
+    font-size: 0.95rem;
+    min-height: 24px;
+  }
+}
