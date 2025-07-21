@@ -85,7 +85,7 @@ def explore_jobs_view(request):
             fields=['title', 'description', 'location', 'company.company_name'],
             fuzziness='AUTO'
         )
-        es_results = JobDocument.search().query(es_query)
+        es_results = JobDocument.search().query(es_query)[:1000]
         job_ids = [int(hit.meta.id) for hit in es_results]
         jobs = Job.objects.filter(job_id__in=job_ids).order_by('-posted_at')
     else:
