@@ -8,6 +8,8 @@ from profiles.models import Company
 from django.urls import reverse
 from django.db.models import Count
 from jobs.models import SavedJob, LikedJob, DislikedJob, Application
+from .documents import JobDocument,UserInteractionDocument
+from elasticsearch_dsl.query import MultiMatch
 
 
 @login_required(login_url='login')
@@ -75,16 +77,29 @@ def explore_jobs_view(request):
     jobseeker_name = user.username
     initials = ''.join([x[0] for x in jobseeker_name.split()]).upper()[:2]
     filter_type = request.GET.get('filter', 'all')
-    job_ids = list(jobs.values_list('job_id', flat=True))
-    applied_ids = set(Application.objects.filter(
-        user=user, job_id__in=job_ids).values_list('job_id', flat=True))
-    saved_ids = set(SavedJob.objects.filter(
-        user=user, job_id__in=job_ids).values_list('job_id', flat=True))
-    liked_ids = set(LikedJob.objects.filter(
-        user=user, job_id__in=job_ids).values_list('job_id', flat=True))
-    disliked_ids = set(DislikedJob.objects.filter(
-        user=user, job_id__in=job_ids).values_list('job_id', flat=True))
-
+    query = request.GET.get('search', '')  
+    jobs = []
+    if query:
+        es_query = MultiMatch(
+            query=query,
+            fields=['title', 'description', 'location', 'company.company_name'],
+            fuzziness='AUTO'
+        )
+        es_results = JobDocument.search().query(es_query)
+        job_ids = [int(hit.meta.id) for hit in es_results]
+        jobs = Job.objects.filter(job_id__in=job_ids).order_by('-posted_at')
+    else:
+        jobs = Job.objects.all()
+    interaction = UserInteractionDocument.get(id=user.user_id)
+    applied_ids = set(map(int, interaction.applied_jobs))
+    saved_ids = set(map(int, interaction.saved_jobs))
+    liked_ids = set(map(int, interaction.liked_jobs))
+    disliked_ids = set(map(int, interaction.disliked_jobs))
+    for job in jobs:
+        job.is_applied = job.job_id in applied_ids
+        job.is_saved = job.job_id in saved_ids
+        job.is_liked = job.job_id in liked_ids
+        job.is_disliked = job.job_id in disliked_ids
     if filter_type == 'applied':
         jobs = jobs.filter(job_id__in=applied_ids)
     elif filter_type == 'saved':
@@ -105,8 +120,50 @@ def explore_jobs_view(request):
         'user': user,
         'filter_type': filter_type,
         'jobseeker_name': jobseeker_name,
-        'jobseeker_initials': initials
+        'jobseeker_initials': initials,
+        'query': query
     })
+
+
+# @login_required(login_url='login')
+# def search_jobs_view(request):
+#     user = request.user
+#     jobseeker_name = user.username
+#     initials = ''.join([x[0] for x in jobseeker_name.split()]).upper()[:2]
+    
+#     query = request.GET.get('search', '')
+#     jobs = []
+#     if query:
+#         es_query = MultiMatch(
+#             query=query,
+#             fields=['title', 'description', 'location', 'company.company_name'],
+#             fuzziness='AUTO'
+#         )
+#         es_results = JobDocument.search().query(es_query)
+#         job_ids = [int(hit.meta.id) for hit in es_results]
+#         jobs = Job.objects.filter(job_id__in=job_ids).order_by('-posted_at')
+#     else:
+#         jobs = Job.objects.all()
+
+#     interaction = UserInteractionDocument.get(id=user.user_id)
+#     applied_ids = set(map(int, interaction.applied_jobs))
+#     saved_ids = set(map(int, interaction.saved_jobs))
+#     liked_ids = set(map(int, interaction.liked_jobs))
+#     disliked_ids = set(map(int, interaction.disliked_jobs))
+#     for job in jobs:
+#         job.is_applied = job.job_id in applied_ids
+#         job.is_saved = job.job_id in saved_ids
+#         job.is_liked = job.job_id in liked_ids
+#         job.is_disliked = job.job_id in disliked_ids
+
+#     return render(request, 'jobs/explore_jobs.html', {
+#         'jobs': jobs,
+#         'user': user,
+#         'jobseeker_name': jobseeker_name,
+#         'jobseeker_initials': initials,
+#         'query': query
+#     })
+
 
 
 @login_required(login_url='login')

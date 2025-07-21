@@ -35,6 +35,7 @@ ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
 
 INSTALLED_APPS = [
     'django.contrib.admin',
+    'django_elasticsearch_dsl',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -87,6 +88,15 @@ DATABASES = {
         'PASSWORD': os.getenv('DB_PASSWORD'),
         'HOST': os.getenv('DB_HOST'),
         'PORT': os.getenv('DB_PORT'),
+    }
+}
+
+ELASTICSEARCH_DSL = {
+        'default': {
+        'hosts': os.getenv('ELASTIC_URL'),
+        'api_key': os.getenv('ELASTIC_API_KEY'),
+        'verify_certs': True,
+        'timeout': 30,
     }
 }
 
