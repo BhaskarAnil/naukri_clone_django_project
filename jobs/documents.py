@@ -2,13 +2,27 @@ from django_elasticsearch_dsl import Document, Index, fields
 from django_elasticsearch_dsl.registries import registry
 from jobs.models import Job, Application, SavedJob, LikedJob, DislikedJob
 from profiles.models import User, CompanyFollows
+from elasticsearch_dsl import analyzer, tokenizer
 
 # Job Index
+edge_ngram_analyzer = analyzer(
+    'edge_ngram_analyzer',
+    tokenizer=tokenizer(
+        'edge_ngram_tokenizer',
+        'edge_ngram',
+        min_gram=1,
+        max_gram=20,
+        token_chars=["letter", "digit"]
+    ),
+    filter=["lowercase"]
+)
 @registry.register_document
 class JobDocument(Document):
     company = fields.ObjectField(properties={
-        'company_name': fields.TextField(),
-    })
+    'company_name': fields.TextField(analyzer=edge_ngram_analyzer, search_analyzer='standard'),})
+    title = fields.TextField(analyzer=edge_ngram_analyzer, search_analyzer='standard')
+    description = fields.TextField(analyzer=edge_ngram_analyzer, search_analyzer='standard')
+    location = fields.TextField(analyzer=edge_ngram_analyzer, search_analyzer='standard')
 
     class Index:
         name = 'jobs'
@@ -17,9 +31,6 @@ class JobDocument(Document):
         model = Job
         fields = [
             'job_id',
-            'title',
-            'description',
-            'location',
             'salary',
             'posted_at',
             'is_active',
