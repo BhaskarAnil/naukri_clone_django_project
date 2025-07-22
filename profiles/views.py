@@ -9,7 +9,7 @@ from .models import Company, CompanyFollows
 from jobs.models import Application, Job, SavedJob
 from reviews.models import CompanyReview
 from .forms import RegisterForm, LoginForm, ProfileForm, CompanyForm
-
+from profiles.tasks import send_welcome_email
 # register view
 
 
@@ -17,7 +17,8 @@ def register_view(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            send_welcome_email.delay(user.email, user.username,"jobseeker")
             return redirect('login')
         else:
             # if there are errors
@@ -34,7 +35,9 @@ def employer_register_view(request):
         form.fields['is_employer'].initial = True
         if form.is_valid():
             form.cleaned_data['is_employer'] = True
-            form.save()
+            user = form.save()
+            send_welcome_email.delay(user.email, user.username,"employer")
+
             return redirect('login')
         else:
             # Always show company_name field for employer registration
