@@ -5,49 +5,42 @@ from django.core.mail import send_mail
 from django.conf import settings
 
 @shared_task
-def send_welcome_email(email, name,identity):
+def send_welcome_email(email, name):
+    identity = name.split("@")[1]
+    name = name.split("@")[0]
     subject = "Welcome to Naukri Clone!"
     if identity == "jobseeker":
-        message = f"""
-                    Hi {name},
-
-                    Welcome to Naukri Clone! 
-
-                    We're excited to have you on board as you take the next step in your career journey. With thousands of job listings and top companies hiring, you're just a few clicks away from your dream job.
-
-                    Here is what you can do next:
-                    Complete your profile to get the best job recommendations  
-                    Explore and apply to jobs that match your skills and interests  
-                    Save jobs for later, and follow companies you admire  
-                    Write reviews to share your workplace experiences  
-
-                    We believe in your potential and are here to help you succeed.  
-                    If you need any support, feel free to contact our team.
-
-                    Happy job hunting!  
-                    — The Naukri Clone Team
-                    """
+        message = (
+        f"Hi {name},\n\n"
+        "Welcome to Naukri Clone!\n\n"
+        "We're excited to have you join our jobseeker community. As you take the next step "
+        "in your career, we're here to support you with thousands of job listings from top companies.\n\n"
+        "Here’s what you can do next:\n"
+        "- Complete your profile to receive personalized job recommendations\n"
+        "- Search and apply to jobs that match your skills and interests\n"
+        "- Save jobs for later or follow companies you're interested in\n"
+        "- Share your experience by writing reviews about companies\n\n"
+        "We believe in your potential and are committed to helping you succeed.\n\n"
+        "If you need any assistance, feel free to contact our support team anytime.\n\n"
+        "Happy job hunting!\n"
+        "The Naukri Clone Team"
+    )
     else:
-        message = f"""
-                    Hi {name},
-
-                    Welcome to Naukri Clone! 
-
-                    We're thrilled to have your company join our growing network of employers who are hiring top talent every day. With your new employer account, you can start connecting with qualified candidates in just a few steps.
-
-                    Here is what you can do next:
-                    Complete your company profile to attract the right candidates  
-                    Post job openings and track applicants in real-time  
-                    View jobseeker profiles, resumes, and engagement  
-                    Respond to company reviews and build your employer brand  
-
-                    We are committed to helping you build a stronger team, faster.
-
-                    If you need any assistance, do not hesitate to reach out to us.
-
-                    Best regards,  
-                    — The Naukri Clone Team
-                    """
+        message = (
+        f"Hi {name},\n\n"
+        "Welcome to Naukri Clone!\n\n"
+        "Thank you for registering your company with us. You now have access to tools that help "
+        "you connect with top talent quickly and efficiently.\n\n"
+        "Here’s what you can do next:\n"
+        "- Set up your company profile with logo, description, and location\n"
+        "- Post job listings with detailed descriptions and required skills\n"
+        "- Manage applicants, view resumes, and track job applications\n"
+        "- Engage with jobseekers and respond to company reviews\n\n"
+        "We’re excited to help you build your team with the best candidates.\n\n"
+        "If you have any questions, feel free to contact our support team.\n\n"
+        "Happy hiring!\n"
+        "The Naukri Clone Team"
+    )
     from_email = settings.DEFAULT_FROM_EMAIL
     recipient_list = [email]
 

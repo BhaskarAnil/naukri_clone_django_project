@@ -18,7 +18,7 @@ def register_view(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            send_welcome_email.delay(user.email, user.username,"jobseeker")
+            send_welcome_email.delay(user.email, user.username+"@jobseeker")
             return redirect('login')
         else:
             # if there are errors
@@ -36,7 +36,7 @@ def employer_register_view(request):
         if form.is_valid():
             form.cleaned_data['is_employer'] = True
             user = form.save()
-            send_welcome_email.delay(user.email, user.username,"employer")
+            send_welcome_email.delay(user.email, user.username+"@employer")
 
             return redirect('login')
         else:
